@@ -6,27 +6,37 @@ import {
   Spinner,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 
 import axios from "axios";
-import { getSender, getUser } from "../../Logic";
+import { baseUrl, getChatingUser, getUser } from "../../Logic";
 import { useChatContext } from "../../Context/ChatContext";
 import { commonStyle } from "../../commonStyle";
 
 function UserChats() {
-  const { chats, setChats, setSelectedChat } = useChatContext();
+  const { chats, setChats, setSelectedChat, fetchAgain, setFetchAgain } =
+    useChatContext();
   const [loading, setLoading] = useState(false);
   const userInfo = getUser();
+  const toast = useToast();
   const getChats = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const { data } = await axios.get(`http://localhost:3001/chat`, {
+      const { data } = await axios.get(`${baseUrl}/chat`, {
         headers: { accesstoken: userInfo.token },
       });
       setLoading(false);
       setChats(data.chats);
     } catch (e) {
-      console.log(e);
+      setLoading(false);
+      toast({
+        title: `${e.message} Please Wait Or Refresh`,
+        isClosable: true,
+        status: "info",
+        duration: 2000,
+        position: "top",
+      });
     }
   };
 
@@ -49,7 +59,7 @@ function UserChats() {
         </AbsoluteCenter>
       ) : (
         chats.map((chat) => {
-          const sender = getSender(chat?.users, userInfo.user._id).userName;
+          const chatingUser = getChatingUser(chat?.users, userInfo.user._id).userName;
           return (
             <Box
               key={chat._id}
@@ -61,10 +71,17 @@ function UserChats() {
               borderRadius={"10px"}
               cursor={"pointer"}
               onClick={() => {
+                setFetchAgain(!fetchAgain);
                 setSelectedChat(chat);
               }}
             >
-              <Text>{sender}</Text>
+              <Text>{chatingUser}</Text>
+              <Text>
+                {chat.latestMessage?.sender?._id === userInfo.user._id
+                  ? "You"
+                  : chat.latestMessage?.sender?.userName}{" "}
+                {chat.latestMessage ? ":" : ""} {chat.latestMessage?.content}
+              </Text>
             </Box>
           );
         })

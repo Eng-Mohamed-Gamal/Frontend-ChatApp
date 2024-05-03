@@ -12,6 +12,7 @@ import {
 import { commonStyle } from "../commonStyle";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { baseUrl } from "../Logic";
 
 export default function LogIn() {
   const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ export default function LogIn() {
     }
     try {
       const {data} = await axios.post(
-        "http://localhost:3001/user/logIn",
+        `${baseUrl}/user/logIn`,
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );

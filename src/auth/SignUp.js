@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import axios from "axios";
 import { commonStyle } from "../commonStyle";
+import { baseUrl } from "../Logic";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ export default function SignUp() {
       formData.append("userName", name);
       formData.append("email", email);
       formData.append("password", password);
-      await axios.post("http://localhost:3001/user", formData);
+      await axios.post(`${baseUrl}/user`, formData);
     } catch (e) {
       toast({
         title: `${e.response.data.error_msg}`,

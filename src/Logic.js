@@ -1,3 +1,7 @@
+
+export const baseUrl = "http://localhost:3001"
+
+
 export const getUser = () => {
   let userInfo = 0;
   if (localStorage.userData) {
@@ -6,7 +10,7 @@ export const getUser = () => {
   return userInfo;
 };
 
-export const getSender = (users, id) => {
+export const getChatingUser = (users, id) => {
   return users[0]?._id === id ? users[1] : users[0];
 };
 
@@ -16,3 +20,9 @@ export const validateMessage = (str) => {
     return copy.length > 0 ? false : true;
   }
 };
+
+export const messagesPosition = (messages, index, loggedUserId) => {
+  return messages[index].sender._id === loggedUserId ? "end" : "start";
+};
+
+

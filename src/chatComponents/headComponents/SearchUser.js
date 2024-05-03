@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { commonStyle } from "../../commonStyle";
 import axios from "axios";
-import { getSender, getUser } from "../../Logic";
+import { baseUrl, getChatingUser, getUser } from "../../Logic";
 import { useChatContext } from "../../Context/ChatContext";
 
 function SearchUser() {
@@ -29,14 +29,14 @@ function SearchUser() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const { userTochat, setUserToChat, chats, setChats  } = useChatContext();
+  const { userTochat, setUserToChat, chats, setChats , setSelectedChat } = useChatContext();
   const userInfo = getUser();
   const toast = useToast();
 
   const getUsers = async () => {
     try {
       setLoading(true);
-      if (querySearch === "" || querySearch[0] === " ") {
+      if (querySearch === "" || querySearch[0] === " " || querySearch === undefined) {
         toast({
           title: "Search Cannot By Empty Or Start With Space",
           isClosable: true,
@@ -49,7 +49,7 @@ function SearchUser() {
         return;
       }
       const { data } = await axios.get(
-        `http://localhost:3001/user?search=${querySearch}`,
+        `${baseUrl}/user?search=${querySearch}`,
         { headers: { accesstoken: userInfo.token } }
       );
       setUsers(data.users);
@@ -72,19 +72,19 @@ function SearchUser() {
     setLoadingCreate(true);
     try {
       const { data } = await axios.post(
-        `http://localhost:3001/chat?userId=${userTochat._id}`,
+        `${baseUrl}/chat?userId=${userTochat._id}`,
         {},
         { headers: { accesstoken: userInfo.token } }
       );
       toast({
         title: data.isChat
           ? `You Already Has A Chat With ${
-              getSender(data.isChat.users, userInfo.user._id).userName
+              getChatingUser(data.isChat.users, userInfo.user._id).userName
             }`
           : `${data.message}`,
         isClosable: true,
-        status: data.isChat ? "info" : "success" ,
-        duration: 4000,
+        status: data.isChat ? "info" : "success",
+        duration: 2000,
         position: "top",
       });
       if (data.chatDetails) setChats([...chats, data.chatDetails]);
@@ -103,9 +103,11 @@ function SearchUser() {
     setUserToChat("");
   };
 
-  useEffect(()=>{
-    if(!isOpen) setUsers([])
-  },[isOpen])
+  useEffect(() => {
+    setUsers([]);
+    setSelectedChat(undefined)
+    setUserToChat(undefined)
+  }, [isOpen]);
 
   return (
     <Box>

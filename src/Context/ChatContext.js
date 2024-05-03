@@ -7,6 +7,7 @@ export const ChatProvider = ({ children }) => {
   const [messages, setMessages] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [userTochat, setUserToChat] = useState();
+  const [fetchAgain , setFetchAgain] = useState(false)
 
 
   return (
@@ -19,7 +20,9 @@ export const ChatProvider = ({ children }) => {
         messages,
         setMessages,
         selectedChat,
-        setSelectedChat
+        setSelectedChat,
+        fetchAgain ,
+        setFetchAgain
       }}
     >
       {children}
