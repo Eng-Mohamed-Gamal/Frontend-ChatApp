@@ -59,7 +59,10 @@ function UserChats() {
         </AbsoluteCenter>
       ) : (
         chats.map((chat) => {
-          const chatingUser = getChatingUser(chat?.users, userInfo.user._id).userName;
+          const chatingUser = getChatingUser(
+            chat?.users,
+            userInfo.user._id
+          ).userName;
           return (
             <Box
               key={chat._id}
@@ -80,7 +83,7 @@ function UserChats() {
                 {chat.latestMessage?.sender?._id === userInfo.user._id
                   ? "You"
                   : chat.latestMessage?.sender?.userName}{" "}
-                {chat.latestMessage ? ":" : ""} {chat.latestMessage?.content}
+                {chat.latestMessage ? ":" : ""} {chat.latestMessage?.content.substring(0 , 3)}...
               </Text>
             </Box>
           );

@@ -45,16 +45,16 @@ export default function LogIn() {
         isClosable: true,
         status: "success",
         duration: 3000,
-        position: "bottom",
+        position: "top",
       })
       localStorage.userData = JSON.stringify({user : data.user , token : data.token})
       navigate("Chats")
     } catch (e) {
       toast({
-        title: `${e.response.data.error_msg}`,
+        title: e.response.data.error_msg || e.response.data.errors,
         isClosable: true,
         status: "error",
-        duration: 2000,
+        duration: 4000,
         position: "top",
       });
     }

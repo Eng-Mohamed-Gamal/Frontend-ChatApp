@@ -57,10 +57,10 @@ export default function SignUp() {
       await axios.post(`${baseUrl}/user`, formData);
     } catch (e) {
       toast({
-        title: `${e.response.data.error_msg}`,
+        title: e.response.data.error_msg || e.response.data.errors,
         isClosable: true,
         status: "error",
-        duration: 2000,
+        duration: 5000,
         position: "top",
       });
       setLoading(false);
@@ -98,7 +98,7 @@ export default function SignUp() {
       <FormControl isRequired>
         <FormLabel mt={"5px"}>Email Adress</FormLabel>
         <Input
-          type="email"
+          type={"email"}
           border={commonStyle.border}
           _hover={{
             border: `${commonStyle.border}`,

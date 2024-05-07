@@ -29,14 +29,19 @@ function SearchUser() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingCreate, setLoadingCreate] = useState(false);
-  const { userTochat, setUserToChat, chats, setChats , setSelectedChat } = useChatContext();
+  const { userTochat, setUserToChat, chats, setChats, setSelectedChat } =
+    useChatContext();
   const userInfo = getUser();
   const toast = useToast();
 
   const getUsers = async () => {
     try {
       setLoading(true);
-      if (querySearch === "" || querySearch[0] === " " || querySearch === undefined) {
+      if (
+        querySearch === "" ||
+        querySearch[0] === " " ||
+        querySearch === undefined
+      ) {
         toast({
           title: "Search Cannot By Empty Or Start With Space",
           isClosable: true,
@@ -55,10 +60,10 @@ function SearchUser() {
       setUsers(data.users);
     } catch (e) {
       toast({
-        title: `${e.response.data.error_msg}`,
+        title: e.response.data.error_msg || e.response.data.errors,
         isClosable: true,
         status: "error",
-        duration: 2000,
+        duration: 4000,
         position: "top",
       });
       setLoading(false);
@@ -84,13 +89,14 @@ function SearchUser() {
           : `${data.message}`,
         isClosable: true,
         status: data.isChat ? "info" : "success",
-        duration: 2000,
+        duration: 4000,
         position: "top",
       });
       if (data.chatDetails) setChats([...chats, data.chatDetails]);
+      if (data.isChat) setSelectedChat(data.isChat);
     } catch (e) {
       toast({
-        title: "Something Went Wrong Try Again",
+        title: e.response.data.error_msg || e.response.data.errors,
         isClosable: true,
         status: "error",
         duration: 2000,
@@ -105,8 +111,7 @@ function SearchUser() {
 
   useEffect(() => {
     setUsers([]);
-    setSelectedChat(undefined)
-    setUserToChat(undefined)
+    setUserToChat(undefined);
   }, [isOpen]);
 
   return (

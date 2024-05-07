@@ -29,6 +29,9 @@ import { commonStyle } from "../../commonStyle";
 import { io } from "socket.io-client";
 import axios from "axios";
 
+const socket = io(baseUrl);
+
+
 function ChatBox() {
   const { selectedChat, messages, setMessages, fetchAgain } = useChatContext();
   const [content, setContent] = useState();
@@ -36,10 +39,21 @@ function ChatBox() {
   const userInfo = getUser();
   const inputRef = useRef();
   const boxRef = useRef();
-  const toat = useToast();
+  const tosat = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   if (selectedChat)
     var chatingUser = getChatingUser(selectedChat.users, userInfo.user._id);
+
+  useEffect(() => {
+    socket.emit("setup", userInfo.user);
+    socket.on("message recieved", (msg) => {
+      setMessages((oldMessages) => [...oldMessages, msg]);
+    });
+  }, []);
+
+  useEffect(() => {
+    handleStartChating();
+  }, [selectedChat, fetchAgain]);
 
   const handleStartChating = async () => {
     if (!selectedChat) return;
@@ -51,17 +65,16 @@ function ChatBox() {
         { headers: { accesstoken: userInfo.token } }
       );
       setMessages(data.messages);
+      socket.emit("join chat", selectedChat._id);
       setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
     return;
   };
 
   const sendMessage = async () => {
     if (!selectedChat) return;
     if (content === undefined || validateMessage(content)) {
-      toat({
+      tosat({
         title: "Donot Try To Send A Empty Message",
         status: "warning",
         isClosable: true,
@@ -78,33 +91,10 @@ function ChatBox() {
         { chatId: selectedChat._id, content },
         { headers: { accesstoken: userInfo.token } }
       );
-      
+     socket.emit("new message", data.detailsMessage);
+      setMessages([...messages, data.detailsMessage]);
     } catch (e) {}
   };
-
-  const realTimeChating = async (detailsMessage)=> {
-    if (!selectedChat) return;
-    try {
-      const { data } = await axios.post(
-        `${baseUrl}/message/getAllMessages`,
-        { chatId: selectedChat._id },
-        { headers: { accesstoken: userInfo.token } }
-      );
-      setMessages([...data.messages , detailsMessage]);
-    } catch (e) {
-      console.log(e);
-    }
-    return;
-  }
-
-  useEffect(() => {
-    handleStartChating();
-  }, [selectedChat, fetchAgain]);
-
-  useEffect(() => {
-    const clientIo = io(baseUrl);
-    clientIo.on("new-Message", (detailsMessage) => realTimeChating(detailsMessage)); 
-  }, []);
 
   return (
     <Box
@@ -180,7 +170,7 @@ function ChatBox() {
               messages.map((message, index) => {
                 return (
                   <Text
-                    key={message._id}
+                    key={message?._id}
                     backgroundColor={"teal.500"}
                     m={"5px 10px"}
                     w={"fit-content"}
@@ -194,7 +184,7 @@ function ChatBox() {
                       userInfo.user._id
                     )}`}
                   >
-                    {message.content}
+                    {message?.content}
                   </Text>
                 );
               })
