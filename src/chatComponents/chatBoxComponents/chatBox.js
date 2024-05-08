@@ -30,7 +30,7 @@ import { io } from "socket.io-client";
 import axios from "axios";
 
 const socket = io(baseUrl);
-
+let compareSelectedChat;
 
 function ChatBox() {
   const { selectedChat, messages, setMessages, fetchAgain } = useChatContext();
@@ -46,14 +46,27 @@ function ChatBox() {
 
   useEffect(() => {
     socket.emit("setup", userInfo.user);
-    socket.on("message recieved", (msg) => {
-      setMessages((oldMessages) => [...oldMessages, msg]);
+    socket.on("message recieved", (newMessage) => {
+      if (
+        compareSelectedChat &&
+        compareSelectedChat._id === newMessage.chat._id
+      ) {
+        setMessages((oldMessages) => [...oldMessages, newMessage]);
+      } else {
+        Notification.requestPermission().then((per) => {
+          if (per === "granted") {
+            new Notification(`Message from ${newMessage.sender.userName}`);
+          }
+        });
+      }
     });
   }, []);
 
   useEffect(() => {
-    handleStartChating();
-  }, [selectedChat, fetchAgain]);
+    if (boxRef.current) {
+      boxRef.current.scrollIntoView();
+    }
+  }, [messages]);
 
   const handleStartChating = async () => {
     if (!selectedChat) return;
@@ -65,11 +78,16 @@ function ChatBox() {
         { headers: { accesstoken: userInfo.token } }
       );
       setMessages(data.messages);
-      socket.emit("join chat", selectedChat._id);
+      socket.emit("joinChat", selectedChat._id);
       setLoading(false);
     } catch (e) {}
     return;
   };
+
+  useEffect(() => {
+    handleStartChating();
+    compareSelectedChat = selectedChat;
+  }, [selectedChat, fetchAgain]);
 
   const sendMessage = async () => {
     if (!selectedChat) return;
@@ -91,7 +109,7 @@ function ChatBox() {
         { chatId: selectedChat._id, content },
         { headers: { accesstoken: userInfo.token } }
       );
-     socket.emit("new message", data.detailsMessage);
+      socket.emit("new Message", data.detailsMessage);
       setMessages([...messages, data.detailsMessage]);
     } catch (e) {}
   };
@@ -164,13 +182,12 @@ function ChatBox() {
             borderRadius={"10px"}
             position={"relative"}
             overflowY={"auto"}
-            ref={boxRef}
           >
             {messages && !loading ? (
               messages.map((message, index) => {
                 return (
                   <Text
-                    key={message?._id}
+                    key={message?._id + Math.random()}
                     backgroundColor={"teal.500"}
                     m={"5px 10px"}
                     w={"fit-content"}
@@ -193,6 +210,7 @@ function ChatBox() {
                 <Spinner color={commonStyle.focusBorderColor} size={"xl"} />
               </AbsoluteCenter>
             )}
+            <Box ref={boxRef}></Box>
           </Box>
           <Box
             display={"flex"}

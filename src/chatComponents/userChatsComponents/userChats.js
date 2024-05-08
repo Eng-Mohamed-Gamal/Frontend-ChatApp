@@ -3,6 +3,7 @@ import {
   AbsoluteCenter,
   Box,
   Heading,
+  Image,
   Spinner,
   Text,
   VStack,
@@ -63,12 +64,16 @@ function UserChats() {
             chat?.users,
             userInfo.user._id
           ).userName;
+
           return (
             <Box
               key={chat._id}
               backgroundColor={"teal.500"}
               color={commonStyle.mainFontColor}
               fontWeight={"bold"}
+              display={"flex"}
+              alignItems={"center"}
+              gap={3}
               w={"100%"}
               p={"15px"}
               borderRadius={"10px"}
@@ -78,13 +83,16 @@ function UserChats() {
                 setSelectedChat(chat);
               }}
             >
-              <Text>{chatingUser}</Text>
-              <Text>
-                {chat.latestMessage?.sender?._id === userInfo.user._id
-                  ? "You"
-                  : chat.latestMessage?.sender?.userName}{" "}
-                {chat.latestMessage ? ":" : ""} {chat.latestMessage?.content.substring(0 , 3)}...
-              </Text>
+              <Image
+                src={
+                  getChatingUser(chat.users, userInfo.user._id).profilePic?.secure_url ||
+                  getChatingUser(chat.users, userInfo.user._id).baseSrc
+                }
+                w={"60px"}
+                h={"60px"}
+                borderRadius={"50%"}
+                ></Image>
+                <Text textTransform={"capitalize"}>{chatingUser}</Text>
             </Box>
           );
         })

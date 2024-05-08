@@ -10,6 +10,7 @@ export const ChatProvider = ({ children }) => {
   const [userTochat, setUserToChat] = useState();
   const [fetchAgain , setFetchAgain] = useState(false)
 
+
   const navigate = useNavigate()
 
   useEffect(()=>{
@@ -29,7 +30,7 @@ export const ChatProvider = ({ children }) => {
         selectedChat,
         setSelectedChat,
         fetchAgain ,
-        setFetchAgain
+        setFetchAgain,
       }}
     >
       {children}
