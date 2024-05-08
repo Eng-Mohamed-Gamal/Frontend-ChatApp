@@ -62,8 +62,8 @@ function UserChats() {
         chats.map((chat) => {
           const chatingUser = getChatingUser(
             chat?.users,
-            userInfo.user._id
-          ).userName;
+            userInfo?.user?._id
+          )?.userName;
 
           return (
             <Box
@@ -85,8 +85,8 @@ function UserChats() {
             >
               <Image
                 src={
-                  getChatingUser(chat.users, userInfo.user._id).profilePic?.secure_url ||
-                  getChatingUser(chat.users, userInfo.user._id).baseSrc
+                  getChatingUser(chat.users, userInfo.user._id)?.profilePic?.secure_url ||
+                  getChatingUser(chat.users, userInfo.user._id)?.baseSrc
                 }
                 w={"60px"}
                 h={"60px"}
