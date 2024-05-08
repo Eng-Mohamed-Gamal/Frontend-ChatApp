@@ -249,7 +249,7 @@ function UpdateUser() {
                     />
                   </FormControl>
                   <Button
-                    isLoading={loading}
+                    isLoading={picLoading}
                     width={"100%"}
                     colorScheme="teal"
                     fontSize={commonStyle.mediumFontSize}
