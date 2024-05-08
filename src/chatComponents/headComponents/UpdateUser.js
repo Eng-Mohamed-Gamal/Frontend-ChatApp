@@ -23,12 +23,13 @@ import {
 import React, { useRef, useState } from "react";
 import { commonStyle } from "../../commonStyle";
 import axios from "axios";
-import { getUser } from "../../Logic";
+import { baseUrl, getUser } from "../../Logic";
 
 function UpdateUser() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const [loading, setLoading] = useState(false);
+  const [picLoading, setPicLoading] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [oldPassword, setOldPassword] = useState();
@@ -42,7 +43,7 @@ function UpdateUser() {
     setLoading(true);
     try {
       const { data } = await axios.put(
-        "http://localhost:3001/user",
+        `${baseUrl}/user`,
         {
           userName: name,
           email,
@@ -57,7 +58,7 @@ function UpdateUser() {
       localStorage.userData = JSON.stringify(userInfo);
     } catch (e) {
       toast({
-        title: `${e.response.data.error_msg}`,
+        title: e.response.data.error_msg || e.response.data.errors,
         isClosable: true,
         status: "error",
         duration: 2000,
@@ -76,13 +77,13 @@ function UpdateUser() {
     });
   };
   const handelUplaod = async () => {
-    setLoading(true);
+    setPicLoading(true);
     const formData = new FormData();
     formData.append("profile", pic);
     formData.append("oldPublicId", userInfo?.user?.profilePic?.puplic_id);
     try {
       const { data } = await axios.post(
-        "http://localhost:3001/user/uploadProfilePic",
+        `${baseUrl}/user/uploadProfilePic`,
         formData,
         {
           headers: { accesstoken: userInfo.token },
@@ -98,16 +99,16 @@ function UpdateUser() {
         duration: 2000,
         position: "top",
       });
-      setLoading(false);
+      setPicLoading(false);
       return;
     }
-    setLoading(false);
+    setPicLoading(false);
     toast({
       title: "Upload Done",
       isClosable: true,
       status: "success",
       duration: 3000,
-      position: "bottom",
+      position: "top",
     });
   };
   const toggleShow = () => {
