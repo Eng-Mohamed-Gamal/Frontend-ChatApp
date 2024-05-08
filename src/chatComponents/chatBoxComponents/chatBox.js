@@ -17,6 +17,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useChatContext } from "../../Context/ChatContext";
 import {
   baseUrl,
@@ -152,15 +153,16 @@ function ChatBox() {
                     textAlign={{ base: "center", sm: "start" }}
                     gap={2}
                   >
-                    <Image
+                    <LazyLoadImage
                       src={
                         chatingUser?.profilePic?.secure_url ||
                         chatingUser?.baseSrc
                       }
-                      w="160px"
-                      h="160px"
-                      borderRadius="50%"
-                    ></Image>
+                      width="160px"
+                      height="160px"
+                      borderRadius="50%" 
+                      effect="blur"
+                    />
                     <Text size="md">UserName : {chatingUser?.userName}</Text>
                     <Text size="md">Email : {chatingUser?.email}</Text>
                   </ModalBody>
