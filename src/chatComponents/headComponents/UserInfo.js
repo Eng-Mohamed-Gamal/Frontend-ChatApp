@@ -9,12 +9,12 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Image,
   Text,
 } from "@chakra-ui/react";
 import LogOut from "./LogOut";
 import UpdateUser from "./UpdateUser";
 import { getUser } from "../../Logic";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function UserInfo() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,7 +29,7 @@ function UserInfo() {
         isOpen={isOpen}
         onClose={onClose}
         isCentered
-        size={{ base: "xs", sm: "sm" , lg : "lg" }}
+        size={{ base: "xs", sm: "sm", lg: "lg" }}
       >
         <ModalOverlay />
         <ModalContent>
@@ -41,14 +41,16 @@ function UserInfo() {
             textAlign={{ base: "center", sm: "start" }}
             gap={2}
           >
-            <Image
+            <LazyLoadImage
+              className="lazyImage"
               src={
                 userInfo.user?.profilePic?.secure_url || userInfo.user?.baseSrc
               }
-              w="160px"
-              h="160px"
-              borderRadius="50%"
-            ></Image>
+              width="160px"
+              height="160px"
+              effect="blur"
+              useIntersectionObserver={true}
+            />
             <Text size="md">UserName : {userInfo.user?.userName}</Text>
             <Text size="md">Email : {userInfo.user?.email}</Text>
             <UpdateUser />

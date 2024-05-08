@@ -3,6 +3,7 @@ import Home from "./mainComponents/home";
 import Chats from "./mainComponents/chats";
 
 import "./App.css";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 function App() {
   return (

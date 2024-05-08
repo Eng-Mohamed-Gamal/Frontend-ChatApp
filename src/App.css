@@ -18,5 +18,15 @@
     background-color: rgb(52, 167, 167);
     border-radius: 30px;
   }
+
+  
+  .lazyImage{
+    border-radius: 50%;
+  }
+  .lazyImage.hight60{
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+  }
   
 

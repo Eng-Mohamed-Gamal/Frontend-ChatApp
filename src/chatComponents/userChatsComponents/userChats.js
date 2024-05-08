@@ -3,7 +3,6 @@ import {
   AbsoluteCenter,
   Box,
   Heading,
-  Image,
   Spinner,
   Text,
   VStack,
@@ -14,6 +13,7 @@ import axios from "axios";
 import { baseUrl, getChatingUser, getUser } from "../../Logic";
 import { useChatContext } from "../../Context/ChatContext";
 import { commonStyle } from "../../commonStyle";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function UserChats() {
   const { chats, setChats, setSelectedChat, fetchAgain, setFetchAgain } =
@@ -83,16 +83,19 @@ function UserChats() {
                 setSelectedChat(chat);
               }}
             >
-              <Image
+              <LazyLoadImage
+                className="lazyImage hight60"
                 src={
-                  getChatingUser(chat.users, userInfo.user._id)?.profilePic?.secure_url ||
+                  getChatingUser(chat.users, userInfo.user._id)?.profilePic
+                    ?.secure_url ||
                   getChatingUser(chat.users, userInfo.user._id)?.baseSrc
                 }
-                w={"60px"}
-                h={"60px"}
-                borderRadius={"50%"}
-                ></Image>
-                <Text textTransform={"capitalize"}>{chatingUser}</Text>
+                width={"60px"}
+                height={"60px"}
+                effect="blur"
+                useIntersectionObserver={true}
+              />
+              <Text textTransform={"capitalize"}>{chatingUser}</Text>
             </Box>
           );
         })

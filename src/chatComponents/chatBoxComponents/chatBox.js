@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Heading,
-  Image,
   Input,
   Modal,
   ModalBody,
@@ -18,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+
 import { useChatContext } from "../../Context/ChatContext";
 import {
   baseUrl,
@@ -154,13 +154,14 @@ function ChatBox() {
                     gap={2}
                   >
                     <LazyLoadImage
+                      className="lazyImage"
                       src={
                         chatingUser?.profilePic?.secure_url ||
                         chatingUser?.baseSrc
                       }
                       width="160px"
                       height="160px"
-                      borderRadius="50%" 
+                      useIntersectionObserver={true}
                       effect="blur"
                     />
                     <Text size="md">UserName : {chatingUser?.userName}</Text>
