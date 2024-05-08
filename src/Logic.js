@@ -1,5 +1,5 @@
 
-export const baseUrl = "http://localhost:3001"
+export const baseUrl = "https://backend-chatapp-tyx0.onrender.com"
 
 
 export const getUser = () => {
