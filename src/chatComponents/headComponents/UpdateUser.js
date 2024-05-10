@@ -40,6 +40,16 @@ function UpdateUser() {
   const userInfo = getUser();
 
   const handelClick = async () => {
+    if(!name && !email && !oldPassword && !newPassword){
+      toast({
+        title: `Update At Least One Field`,
+        isClosable: true,
+        status: "error",
+        duration: 2000,
+        position: "top",
+      });
+      return
+    }
     setLoading(true);
     try {
       const { data } = await axios.put(
@@ -77,6 +87,16 @@ function UpdateUser() {
     });
   };
   const handelUplaod = async () => {
+    if(!pic){
+      toast({
+        title: `Select Image`,
+        isClosable: true,
+        status: "error",
+        duration: 2000,
+        position: "top",
+      });
+      return
+    }
     setPicLoading(true);
     const formData = new FormData();
     formData.append("profile", pic);

@@ -22,8 +22,10 @@
   
   .lazyImage{
     border-radius: 50%;
+    width: 160px;
+    height: 160px;
   }
-  .lazyImage.hight60{
+  .lazyImage.height60{
     border-radius: 50%;
     height: 60px;
     width: 60px;

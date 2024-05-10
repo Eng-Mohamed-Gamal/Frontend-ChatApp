@@ -25,9 +25,9 @@ export default function Home() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(()=>{
     if(localStorage.userData) navigate("Chats") 
-  }, [navigate]);
+  },[]);
 
   return (
     <Container

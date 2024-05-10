@@ -15,7 +15,7 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(()=>{
     if(!localStorage.userData) navigate("/")
-  })
+  },[navigate])
 
 
   return (

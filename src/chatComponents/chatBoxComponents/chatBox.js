@@ -112,6 +112,7 @@ function ChatBox() {
       );
       socket.emit("new Message", data.detailsMessage);
       setMessages([...messages, data.detailsMessage]);
+      setContent("")
     } catch (e) {}
   };
 

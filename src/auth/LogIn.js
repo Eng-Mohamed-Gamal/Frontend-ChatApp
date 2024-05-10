@@ -40,6 +40,8 @@ export default function LogIn() {
         { email, password },
         { headers: { "Content-Type": "application/json" } }
       );
+      navigate("Chats") 
+      localStorage.userData = JSON.stringify({user : data.user , token : data.token})
       toast({
         title: "Successful Login Welcome",
         isClosable: true,
@@ -47,8 +49,6 @@ export default function LogIn() {
         duration: 3000,
         position: "top",
       })
-      localStorage.userData = JSON.stringify({user : data.user , token : data.token})
-      navigate("Chats")
     } catch (e) {
       toast({
         title: e.response.data.error_msg || e.response.data.errors,

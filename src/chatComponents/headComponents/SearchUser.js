@@ -21,6 +21,7 @@ import { commonStyle } from "../../commonStyle";
 import axios from "axios";
 import { baseUrl, getChatingUser, getUser } from "../../Logic";
 import { useChatContext } from "../../Context/ChatContext";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function SearchUser() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -179,12 +180,14 @@ function SearchUser() {
                           setUserToChat(user);
                         }}
                       >
-                        <Image
-                          src={user?.profilePic?.secure_url || user?.baseSrc}
-                          w="60px"
-                          h="60px"
-                          border={commonStyle.border}
-                          borderRadius={"50%"}
+                        <LazyLoadImage
+                          className="lazyImage height60"
+                          src={
+                            user.profilePic?.secure_url ||
+                            user?.baseSrc
+                          }
+                          useIntersectionObserver={true}
+                          effect="blur"
                         />
                         <Box>
                           <Text fontSize={"lg"} textTransform={"capitalize"}>

@@ -84,14 +84,12 @@ function UserChats() {
               }}
             >
               <LazyLoadImage
-                className="lazyImage hight60"
+                className="lazyImage height60"
                 src={
                   getChatingUser(chat.users, userInfo.user._id)?.profilePic
                     ?.secure_url ||
                   getChatingUser(chat.users, userInfo.user._id)?.baseSrc
                 }
-                width={"60px"}
-                height={"60px"}
                 effect="blur"
                 useIntersectionObserver={true}
               />
